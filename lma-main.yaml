@@ -20,27 +20,29 @@ Description: Amazon Transcribe Live Meeting Assist - LMA (v0.1.1)
 Parameters:
 
   MeetingAssistService:
-    Default: 'BEDROCK_KNOWLEDGE_BASE'
+    Default: 'NONE'
     Type: String
     AllowedValues:
+      - 'NONE'
       - 'BEDROCK_KNOWLEDGE_BASE'
-    Description: Choose which knowledge base / LLM service to use (Currently only BEDROCK_KNOWLEDGE_BASE is supported)
+    Description: Choose which knowledge base / LLM service to use (NONE or choose BEDROCK_KNOWLEDGE_BASE)
 
   BedrockKnowledgeBaseId:
     Type: String
-    Default: ''
-    AllowedPattern: '^(|[0-9a-zA-Z]{10})$'
+    Default: 'NONE'
+    AllowedPattern: '^(NONE|[0-9a-zA-Z]{10})$'
     Description: >
-      If MeetingAssistService is BEDROCK_KNOWLEDGE_BASE, provide the knowledge base *Id* (not name) of an existing Bedrock knowledge base to be used for Meeting Assist bot.
+      If MeetingAssistService is BEDROCK_KNOWLEDGE_BASE, provide the knowledge base *Id* (not name) of an existing Bedrock knowledge base to be used for Meeting Assist bot. Use 'NONE' if MeetingAssistService is not BEDROCK_KNOWLEDGE_BASE.
 
   BedrockKnowledgeBaseModelID:
     Type: String
-    Default: 'anthropic.claude-3-sonnet-20240229-v1:0'
+    Default: 'NONE'
     AllowedValues:
+      - 'NONE'
       - 'anthropic.claude-3-haiku-20240307-v1:0'
       - 'anthropic.claude-3-sonnet-20240229-v1:0'
     Description: >-
-      If MeetingAssistService is BEDROCK_KNOWLEDGE_BASE, select a Bedrock LLM model from the list."
+      If MeetingAssistService is BEDROCK_KNOWLEDGE_BASE, select a Bedrock LLM model from the list. Use 'NONE' if MeetingAssistService is not BEDROCK_KNOWLEDGE_BASE.
 
   AssistantWakePhraseRegEx:
     Type: String
@@ -258,6 +260,9 @@ Parameters:
     Type: Number
     Description: 'Number of days after which bucket objects will be deleted from the Recordings bucket.'
     Default: 30
+
+Conditions:
+    UseBedrockKnowledgeBase: !Not [!Equals [!Ref MeetingAssistService, 'NONE']]
 
 Metadata:
   AWS::CloudFormation::Interface:
@@ -590,8 +595,8 @@ Resources:
         AISTACK: !Ref AISTACK
         QNABOTSTACK: !Ref QNABOT
         MeetingAssistService: !Ref MeetingAssistService
-        BedrockKnowledgeBaseID: !Ref BedrockKnowledgeBaseId
-        BedrockKnowledgeBaseModelID: !Ref BedrockKnowledgeBaseModelID
+        BedrockKnowledgeBaseID: !If [ UseBedrockKnowledgeBase, !Ref BedrockKnowledgeBaseId, '' ]
+        BedrockKnowledgeBaseModelID: !If [ UseBedrockKnowledgeBase, !Ref BedrockKnowledgeBaseModelID, '' ]
         AmazonQAppId: 'NOT CURRENTLY USED'
         AmazonQUserId: 'NOT CURRENTLY USED'
         LexMeetingAssistBotId: !GetAtt QNABOT.Outputs.LexV2BotId
