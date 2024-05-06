@@ -44,8 +44,8 @@ Parameters:
 
   BedrockKnowledgeBaseID:
     Type: String
-    Default: 'NONE'
-    AllowedPattern: '^(NONE|[0-9a-zA-Z]{10})$'
+    Default: ''
+    AllowedPattern: '^(|NONE|[0-9a-zA-Z]{10})$'
     Description: >
       If MeetingAssistService is BEDROCK_KNOWLEDGE_BASE, provide the knowledge base *Id* (not name) of an existing Bedrock knowledge base to be used for Meeting Assist bot. Use 'NONE' if MeetingAssistService is not BEDROCK_KNOWLEDGE_BASE.
 
