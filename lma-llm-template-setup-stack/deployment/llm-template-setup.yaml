@@ -69,9 +69,9 @@ Resources:
       Runtime: python3.11
       MemorySize: 128
       Timeout: 60
-    Environment:
-      Variables:
-        DOMAIN: !Ref Domain
+      Environment:
+        Variables:
+          DOMAIN: !Ref Domain
 
   LLMStorePromptTemplates:
     Type: "AWS::CloudFormation::CustomResource"
