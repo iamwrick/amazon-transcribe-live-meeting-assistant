@@ -19,6 +19,15 @@ Description: Amazon Transcribe Live Meeting Assist - LMA (v0.1.1)
 
 Parameters:
 
+  Domain:
+    Default: ''
+    Type: String
+    AllowedValues:
+      - ''
+      - 'Healthcare'
+    Description: Choose Healthcare domain if needed or else leave it default
+
+
   MeetingAssistService:
     Default: 'NONE'
     Type: String
