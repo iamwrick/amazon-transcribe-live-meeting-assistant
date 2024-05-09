@@ -271,6 +271,8 @@ Parameters:
 
 Conditions:
     UseBedrockKnowledgeBase: !Not [!Equals [!Ref MeetingAssistService, 'NONE']]
+    IsHealthcareDomainSelected: !Equals [ !Ref Domain, 'Healthcare' ]
+
 
 Metadata:
   AWS::CloudFormation::Interface:
@@ -619,7 +621,13 @@ Resources:
           ]
         WebAppBucket: !GetAtt AISTACK.Outputs.WebAppBucket
         CloudFrontDistributionId: !GetAtt AISTACK.Outputs.CloudFrontDistributionId
-        QnaMeetingAssistDemoJson: <ARTIFACT_BUCKET_TOKEN>/<ARTIFACT_PREFIX_TOKEN>/lma-meetingassist-setup-stack/qna-ma-demo.jsonl
+        #===== wtalukda =====
+        #QnaMeetingAssistDemoJson: <ARTIFACT_BUCKET_TOKEN>/<ARTIFACT_PREFIX_TOKEN>/lma-meetingassist-setup-stack/qna-ma-demo.jsonl
+        QnaMeetingAssistDemoJson: !If
+          - IsHealthcareDomainSelected
+          - <ARTIFACT_BUCKET_TOKEN>/<ARTIFACT_PREFIX_TOKEN>/lma-meetingassist-setup-stack/qna-ma-healthcare-demo.jsonl
+          - <ARTIFACT_BUCKET_TOKEN>/<ARTIFACT_PREFIX_TOKEN>/lma-meetingassist-setup-stack/qna-ma-demo.jsonl
+        #====== wtalukda =========
         # Changes to Params below force AgentAssist Setup to update.
         TranscribeLanguageCode: !Ref TranscribeLanguageCode
         TranscriptLambdaHookFunctionArn: !Ref TranscriptLambdaHookFunctionArn
