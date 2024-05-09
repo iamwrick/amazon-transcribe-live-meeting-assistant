@@ -23,6 +23,15 @@ Parameters:
   LMAStackName:
     Type: String
     Description: LMA Stack Name
+
+  # Optional
+  Domain:
+    Type: String
+    Default: ''
+    AllowedValues:
+      - ''
+      - Healthcare
+    Description: The domain of the application (optional)
     
   # Required
   AISTACK:
@@ -167,6 +176,8 @@ Conditions:
   #ShouldConfigureBedrockKB: !Equals [!Ref MeetingAssistService, 'BEDROCK_KNOWLEDGE_BASE']
   ShouldConfigureBedrockKB: !Not [ !Equals [ !Ref BedrockKnowledgeBaseID, 'NONE' ] ] # Updated condition to check if BedrockKnowledgeBaseID is provided
   ShouldConfigureQBusiness: !Equals [!Ref MeetingAssistService, 'Q_BUSINESS']
+  IsHealthcareDomain: !Equals [ !Ref Domain, 'Healthcare' ]
+
 
 Resources:
 
@@ -427,6 +438,11 @@ Resources:
                 Resource:
                   - !Sub "arn:${AWS::Partition}:s3:::${WebAppBucket}"
                   - !Sub "arn:${AWS::Partition}:s3:::${WebAppBucket}/*"
+              # wtalukda-added
+              - Action:
+                  - s3:GetObject
+                Effect: Allow
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${QnaMeetingAssistDemoJson}"
               - Action:
                   - cloudfront:CreateInvalidation
                 Effect: Allow
