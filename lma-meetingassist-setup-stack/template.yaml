@@ -441,6 +441,7 @@ Resources:
               # wtalukda-added
               - Action:
                   - s3:GetObject
+                  - s3:PutObject
                 Effect: Allow
                 Resource: !Sub "arn:${AWS::Partition}:s3:::${QnaMeetingAssistDemoJson}"
               - Action:
